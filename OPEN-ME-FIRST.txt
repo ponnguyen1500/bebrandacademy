@@ -1,0 +1,31 @@
+BÊ BRAND ACADEMY v5.3 — FULL PROJECT + PREVIEW
+
+OPTION A: PREVIEW NOW, WITHOUT GITHUB OR NPM
+- Double-click PREVIEW-WITHOUT-NPM.html to see an offline snapshot of the homepage.
+- See PREVIEW-SCREENSHOT.jpg for a quick image of the layout.
+- NOTE: This offline HTML is a static preview, not a substitute for running the interactive React website.
+
+OPTION B: PREVIEW THE REAL INTERACTIVE WEBSITE
+1. Extract ZIP (do not open files directly inside it).
+2. Open this folder in VS Code.
+3. Terminal -> New Terminal.
+4. Run: npm.cmd install
+5. Run: npm.cmd run dev
+6. Visit the localhost URL shown by Vite.
+
+OPTION C: LATER, AFTER YOU ARE HAPPY WITH THE PREVIEW
+- Run npm.cmd run build and verify the output.
+- Upload SOURCE project to GitHub and link the repo to Netlify.
+- GoDaddy can be kept as the domain registrar.
+
+ASSETS
+- public/logo-light.png and public/logo-dark.png are the versions used by the live website.
+- public/logos/ includes alternative SVG/PNG exports.
+- assets/source-logos/ contains the original uploaded Light/Dark PNGs, untouched.
+
+GOOGLE TAG MANAGER
+- GTM-K4LHPRZB is in index.html.
+
+IMPORTANT
+- Event details have been drafted from the provided documents; confirm schedule/prices/registration before selling tickets.
+- npm packages are not bundled. npm.cmd install downloads standard project dependencies.
