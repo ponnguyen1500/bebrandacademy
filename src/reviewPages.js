@@ -1,13 +1,12 @@
-/* V0.2 source of truth — 17 page templates, 95 content sections. All bracketed content is pending approval. */
 export const pages = [
   {
     "id": "home",
-    "title": "Homepage",
+    "title": "Trang chủ",
     "path": "/",
     "code": "P01",
     "sections": [
       {
-        "title": "Hero / Định vị",
+        "title": "Định vị thương hiệu",
         "layout": "hero",
         "body": "Headline định vị · Lợi ích cốt lõi",
         "cta": "Khám phá khóa học",
@@ -57,12 +56,12 @@ export const pages = [
         "code": "S05"
       },
       {
-        "title": "Student Showcase",
+        "title": "Dự án học viên",
         "layout": "cards",
         "body": "Tên dự án · Bối cảnh · Kết quả",
         "cta": "Xem sản phẩm học viên",
         "to": "showcase",
-        "image": "Ảnh dự án được phép sử dụng · 16:9",
+        "image": "Ảnh dự án · 16:9",
         "cardTo": "project",
         "code": "S06"
       },
@@ -87,7 +86,7 @@ export const pages = [
         "code": "S08"
       },
       {
-        "title": "Knowledge Hub",
+        "title": "Kiến thức thương hiệu",
         "layout": "cards",
         "body": "Tiêu đề bài viết · Chủ đề · Thời lượng đọc",
         "cta": "Khám phá kiến thức",
@@ -97,7 +96,7 @@ export const pages = [
         "code": "S09"
       },
       {
-        "title": "Final Conversion",
+        "title": "Khám phá chương trình",
         "layout": "cta",
         "body": "Tóm tắt giá trị",
         "cta": "Khám phá khóa học",
@@ -110,12 +109,12 @@ export const pages = [
   },
   {
     "id": "about",
-    "title": "About Bê Brand",
+    "title": "Về Bê Brand",
     "path": "/about",
     "code": "P02",
     "sections": [
       {
-        "title": "Hero / Câu chuyện",
+        "title": "Câu chuyện Bê Brand",
         "layout": "hero",
         "body": "Định vị · Giá trị",
         "cta": "Khám phá khóa học",
@@ -125,7 +124,7 @@ export const pages = [
         "code": "S01"
       },
       {
-        "title": "Brand Story",
+        "title": "Câu chuyện thương hiệu",
         "layout": "split",
         "body": "Nguồn gốc · Tầm nhìn · Sứ mệnh",
         "cta": "",
@@ -137,7 +136,7 @@ export const pages = [
       {
         "title": "Bê Brand và BrandBAE",
         "layout": "organizers",
-        "body": "Quan hệ và vai trò cần xác nhận",
+        "body": "Quan hệ và vai trò",
         "cta": "Khám phá chuỗi Talkshow",
         "to": "talkshow",
         "image": "",
@@ -178,12 +177,12 @@ export const pages = [
   },
   {
     "id": "courses",
-    "title": "Academy / Courses",
+    "title": "Khóa học",
     "path": "/academy",
     "code": "P03",
     "sections": [
       {
-        "title": "Hero danh mục",
+        "title": "Khóa học",
         "layout": "hero",
         "body": "Tiêu đề · Hướng dẫn chọn chương trình",
         "cta": "",
@@ -236,12 +235,12 @@ export const pages = [
   },
   {
     "id": "course",
-    "title": "Course Detail",
+    "title": "Chi tiết khóa học",
     "path": "/academy/course",
     "code": "P04",
     "sections": [
       {
-        "title": "Hero khóa học",
+        "title": "[Tên khóa học]",
         "layout": "hero",
         "body": "Tên khóa học · Đầu ra · Thông tin nhanh",
         "cta": "Đăng ký tư vấn",
@@ -261,7 +260,7 @@ export const pages = [
         "code": "S02"
       },
       {
-        "title": "Kết quả & USP",
+        "title": "Kết quả học tập",
         "layout": "cards",
         "body": "Năng lực đạt được · Sản phẩm đầu ra · USP",
         "cta": "",
@@ -271,7 +270,7 @@ export const pages = [
         "code": "S03"
       },
       {
-        "title": "Lộ trình / Curriculum",
+        "title": "Lộ trình học",
         "layout": "timeline",
         "body": "Module · Buổi học · Mục tiêu",
         "cta": "",
@@ -296,7 +295,7 @@ export const pages = [
         "body": "Sản phẩm thật · Phản hồi học viên",
         "cta": "Xem Showcase",
         "to": "showcase",
-        "image": "Ảnh dự án được phép sử dụng · 16:9",
+        "image": "Ảnh dự án · 16:9",
         "cardTo": "project",
         "code": "S06"
       },
@@ -311,7 +310,7 @@ export const pages = [
         "code": "S07"
       },
       {
-        "title": "FAQ & chính sách",
+        "title": "Câu hỏi & chính sách",
         "layout": "faq",
         "body": "Điều kiện · Hỗ trợ · Hoàn/hủy nếu có",
         "cta": "Xem chính sách",
@@ -321,7 +320,7 @@ export const pages = [
         "code": "S08"
       },
       {
-        "title": "Đăng ký",
+        "title": "Tư vấn khóa học",
         "layout": "cta",
         "body": "Tóm tắt quyền lợi",
         "cta": "Đăng ký tư vấn",
@@ -334,12 +333,12 @@ export const pages = [
   },
   {
     "id": "mentors",
-    "title": "Mentor Directory",
+    "title": "Đội ngũ Mentor",
     "path": "/mentors",
     "code": "P05",
     "sections": [
       {
-        "title": "Hero đội ngũ",
+        "title": "Đội ngũ Mentor",
         "layout": "hero",
         "body": "Giới thiệu mentor · Chuyên môn",
         "cta": "",
@@ -372,7 +371,7 @@ export const pages = [
   },
   {
     "id": "mentor",
-    "title": "Mentor Profile",
+    "title": "Hồ sơ Mentor",
     "path": "/mentors/profile",
     "code": "P06",
     "sections": [
@@ -420,12 +419,12 @@ export const pages = [
   },
   {
     "id": "showcase",
-    "title": "Student Showcase",
+    "title": "Dự án học viên",
     "path": "/showcase",
     "code": "P07",
     "sections": [
       {
-        "title": "Hero Showcase",
+        "title": "Dự án học viên",
         "layout": "hero",
         "body": "Giá trị học qua thực hành",
         "cta": "",
@@ -450,7 +449,7 @@ export const pages = [
         "body": "Tên dự án · Bối cảnh",
         "cta": "Xem dự án",
         "to": "project",
-        "image": "Ảnh dự án được phép sử dụng · 16:9",
+        "image": "Ảnh dự án · 16:9",
         "cardTo": "project",
         "code": "S03"
       },
@@ -468,12 +467,12 @@ export const pages = [
   },
   {
     "id": "project",
-    "title": "Showcase Detail",
+    "title": "Chi tiết dự án",
     "path": "/showcase/project",
     "code": "P08",
     "sections": [
       {
-        "title": "Hero dự án",
+        "title": "[Tên dự án]",
         "layout": "hero",
         "body": "Tên dự án · Học viên / Nhóm nếu đồng ý",
         "cta": "",
@@ -483,7 +482,7 @@ export const pages = [
         "code": "S01"
       },
       {
-        "title": "Brief & quy trình",
+        "title": "Đề bài & quy trình",
         "layout": "timeline",
         "body": "Đề bài · Cách làm · Vai trò",
         "cta": "",
@@ -493,7 +492,7 @@ export const pages = [
         "code": "S02"
       },
       {
-        "title": "Kết quả / Gallery",
+        "title": "Kết quả dự án",
         "layout": "gallery",
         "body": "Kết quả đã xác minh",
         "cta": "",
@@ -516,12 +515,12 @@ export const pages = [
   },
   {
     "id": "events",
-    "title": "Talkshow & Events",
+    "title": "Sự kiện",
     "path": "/events",
     "code": "P09",
     "sections": [
       {
-        "title": "Talkshow & Events",
+        "title": "Talkshow & Sự kiện",
         "layout": "hero",
         "body": "Giới thiệu hoạt động · Chuỗi 5 buổi",
         "cta": "Khám phá chuỗi 5 buổi",
@@ -563,7 +562,7 @@ export const pages = [
       {
         "title": "Các chương trình đã diễn ra",
         "layout": "past",
-        "body": "Nội dung · Ảnh recap được phép công bố",
+        "body": "Nội dung · Ảnh recap",
         "cta": "Xem chuỗi Talkshow",
         "to": "talkshow",
         "image": "",
@@ -584,12 +583,12 @@ export const pages = [
   },
   {
     "id": "event",
-    "title": "Event Detail / Buổi Talkshow",
+    "title": "Chi tiết Talkshow",
     "path": "/talkshow/02",
     "code": "P10",
     "sections": [
       {
-        "title": "Hero buổi Talkshow",
+        "title": "Thông tin buổi Talkshow",
         "layout": "hero",
         "body": "Chủ đề · Giá trị cốt lõi · Thời gian / Hình thức",
         "cta": "Nhận thông báo buổi này",
@@ -634,12 +633,12 @@ export const pages = [
         "body": "Tên · Vai trò · Kinh nghiệm",
         "cta": "",
         "to": "",
-        "image": "Ảnh chân dung được phép sử dụng · 4:5",
+        "image": "Ảnh chân dung · 4:5",
         "cardTo": "",
         "code": "S05"
       },
       {
-        "title": "Nội dung và agenda",
+        "title": "Nội dung và lịch trình",
         "layout": "timeline",
         "body": "Chặng nội dung · Thời lượng · Trao đổi",
         "cta": "",
@@ -651,7 +650,7 @@ export const pages = [
       {
         "title": "Quyền lợi của buổi này",
         "layout": "cards",
-        "body": "Quyền tham dự · Tài liệu / Record / Cộng đồng nếu duyệt",
+        "body": "Quyền tham dự · Tài liệu / Record / Cộng đồng",
         "cta": "",
         "to": "",
         "image": "",
@@ -662,14 +661,14 @@ export const pages = [
         "title": "Giá và điều kiện áp dụng",
         "layout": "pricing",
         "body": "Giá · Phạm vi quyền lợi · Điều kiện",
-        "cta": "Xem cấu trúc chính sách",
+        "cta": "Xem chính sách",
         "to": "policies",
         "image": "",
         "cardTo": "",
         "code": "S08"
       },
       {
-        "title": "FAQ trước khi tham gia",
+        "title": "Câu hỏi trước khi tham gia",
         "layout": "faq",
         "body": "Nhận lịch · Đổi / Hủy · Quyền record",
         "cta": "Xem chính sách",
@@ -679,9 +678,9 @@ export const pages = [
         "code": "S09"
       },
       {
-        "title": "Nhận thông báo về buổi này",
+        "title": "Liên hệ về chương trình",
         "layout": "form",
-        "body": "Tên · Một kênh liên hệ · Thông tin xử lý dữ liệu",
+        "body": "Nhu cầu · Buổi quan tâm · Phương án · Fanpage Bê Brand",
         "cta": "",
         "to": "",
         "image": "",
@@ -692,12 +691,12 @@ export const pages = [
   },
   {
     "id": "knowledge",
-    "title": "Knowledge Hub",
+    "title": "Kiến thức",
     "path": "/journal",
     "code": "P11",
     "sections": [
       {
-        "title": "Hero thư viện",
+        "title": "Thư viện kiến thức",
         "layout": "hero",
         "body": "Chủ đề · Giá trị kiến thức",
         "cta": "",
@@ -729,7 +728,7 @@ export const pages = [
       {
         "title": "Tài nguyên / Khóa liên quan",
         "layout": "cta",
-        "body": "Tài nguyên đã duyệt",
+        "body": "Tài nguyên",
         "cta": "Khám phá khóa học",
         "to": "courses",
         "image": "",
@@ -740,12 +739,12 @@ export const pages = [
   },
   {
     "id": "article",
-    "title": "Article Detail",
+    "title": "Bài viết",
     "path": "/journal/article",
     "code": "P12",
     "sections": [
       {
-        "title": "Tiêu đề & cover",
+        "title": "[Tiêu đề bài viết]",
         "layout": "hero",
         "body": "Headline · Tác giả · Ngày",
         "cta": "",
@@ -788,12 +787,12 @@ export const pages = [
   },
   {
     "id": "community",
-    "title": "Community",
+    "title": "Cộng đồng",
     "path": "/community",
     "code": "P13",
     "sections": [
       {
-        "title": "Hero cộng đồng",
+        "title": "Cộng đồng Bê Brand",
         "layout": "hero",
         "body": "Giá trị cộng đồng",
         "cta": "",
@@ -825,7 +824,7 @@ export const pages = [
       {
         "title": "Tham gia cộng đồng",
         "layout": "cta",
-        "body": "Kênh tham gia được duyệt",
+        "body": "Kênh tham gia",
         "cta": "Để lại thông tin",
         "to": "contact",
         "image": "",
@@ -836,7 +835,7 @@ export const pages = [
   },
   {
     "id": "contact",
-    "title": "Contact / Đăng ký quan tâm",
+    "title": "Liên hệ",
     "path": "/contact",
     "code": "P14",
     "sections": [
@@ -861,9 +860,9 @@ export const pages = [
         "code": "S02"
       },
       {
-        "title": "Gửi yêu cầu",
+        "title": "Liên hệ Bê Brand",
         "layout": "form",
-        "body": "Loại yêu cầu · Tên · Email hoặc số điện thoại · Thông tin dữ liệu",
+        "body": "Nhu cầu · Buổi quan tâm · Phương án · Fanpage Bê Brand",
         "cta": "",
         "to": "",
         "image": "",
@@ -871,10 +870,10 @@ export const pages = [
         "code": "S03"
       },
       {
-        "title": "Điều gì xảy ra tiếp theo?",
+        "title": "Cần được giải đáp?",
         "layout": "faq",
-        "body": "Bước tiếp nhận · Cách phản hồi · Kênh hỗ trợ",
-        "cta": "Xem cấu trúc chính sách",
+        "body": "Thông tin chương trình · Kênh liên hệ · Chính sách tham gia",
+        "cta": "Xem chính sách",
         "to": "policies",
         "image": "",
         "cardTo": "",
@@ -884,12 +883,12 @@ export const pages = [
   },
   {
     "id": "thanks",
-    "title": "Thank You / Xác nhận mẫu",
+    "title": "Kết nối với Bê Brand",
     "path": "/thanks",
     "code": "P15",
     "sections": [
       {
-        "title": "Hoàn tất thao tác mẫu",
+        "title": "Kết nối với Bê Brand",
         "layout": "success",
         "body": "Loại yêu cầu · Buổi · Phương án",
         "cta": "Xem lại chuỗi Talkshow",
@@ -899,9 +898,9 @@ export const pages = [
         "code": "S01"
       },
       {
-        "title": "Bước tiếp theo",
+        "title": "Thông tin chương trình",
         "layout": "split",
-        "body": "Quy trình tiếp nhận và phản hồi chờ duyệt",
+        "body": "Chương trình quan tâm · Kênh liên hệ",
         "cta": "",
         "to": "",
         "image": "",
@@ -922,7 +921,7 @@ export const pages = [
   },
   {
     "id": "policies",
-    "title": "Policies / Cấu trúc chờ duyệt",
+    "title": "Chính sách",
     "path": "/policies",
     "code": "P16",
     "sections": [
@@ -1027,7 +1026,7 @@ export const pages = [
       {
         "title": "Các chương trình đã diễn ra",
         "layout": "past",
-        "body": "Nội dung · Ảnh recap được phép công bố",
+        "body": "Nội dung · Ảnh recap",
         "cta": "",
         "to": "",
         "image": "",
@@ -1037,7 +1036,7 @@ export const pages = [
       {
         "title": "Quyền lợi khác khi tham gia",
         "layout": "cards",
-        "body": "Tài liệu · Trao đổi / Kết nối · Record nếu duyệt · Quyền lợi theo gói",
+        "body": "Tài liệu · Trao đổi / Kết nối · Record · Quyền lợi theo gói",
         "cta": "",
         "to": "",
         "image": "",
@@ -1048,7 +1047,7 @@ export const pages = [
         "title": "Giá, bảng giá và chính sách giá",
         "layout": "pricing",
         "body": "Giá · Phạm vi buổi · Điều kiện",
-        "cta": "Xem cấu trúc chính sách",
+        "cta": "Xem chính sách",
         "to": "policies",
         "image": "",
         "cardTo": "",
@@ -1057,7 +1056,7 @@ export const pages = [
       {
         "title": "Về Bê Brand và BrandBAE",
         "layout": "organizers",
-        "body": "Vai trò · Quan hệ cần xác nhận",
+        "body": "Vai trò · Quan hệ",
         "cta": "Tìm hiểu về Bê Brand",
         "to": "about",
         "image": "",
@@ -1068,16 +1067,16 @@ export const pages = [
         "title": "Câu hỏi trước khi tham gia",
         "layout": "faq",
         "body": "Vé lẻ / Gói · Record · Buổi đã qua · Đổi / Hủy",
-        "cta": "Xem cấu trúc chính sách",
+        "cta": "Xem chính sách",
         "to": "policies",
         "image": "",
         "cardTo": "",
         "code": "S09"
       },
       {
-        "title": "Nhận thông báo về chuỗi Talkshow",
+        "title": "Nhận thông tin về chuỗi Talkshow",
         "layout": "form",
-        "body": "Tên · Email hoặc số điện thoại · Buổi quan tâm · Thông tin dữ liệu",
+        "body": "Nhu cầu · Buổi quan tâm · Phương án · Fanpage Bê Brand",
         "cta": "",
         "to": "",
         "image": "",
