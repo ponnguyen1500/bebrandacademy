@@ -1,209 +1,98 @@
-import { useEffect, useState } from 'react';
-import { ArrowDown, ArrowLeft, ArrowRight, Menu, X } from 'lucide-react';
-import { identity, sessions } from './content.js';
+import { createElement as h, Fragment as ReactFragment, useEffect, useState } from 'react';
+import { ArrowRight, Menu, X } from 'lucide-react';
+import { identity } from './content.js';
+import { pages } from './reviewPages.js';
+const pageById=Object.fromEntries(pages.map(p=>[p.id,p]));
+const numbers=["01","02","03","04","05"];
+const plans=[["single","Theo buổi","Giá từng buổi · Buổi áp dụng · Quyền lợi"],["series","Cả chuỗi","Tổng giá · Buổi bao gồm · Điều kiện buổi đã qua"],["group","Theo nhóm","Số người · Giá theo người/nhóm · Quyền lợi"]];
+const topics=[["course","Tư vấn khóa học"],["talkshow","Nhận thông báo Talkshow"],["community","Tham gia cộng đồng"],["other","Liên hệ khác"]];
+const legacy={"top":"/","main":"/","about":"/about","speakers":"/mentors","talkshow":"/talkshow","journey":"/talkshow","register":"/contact?topic=talkshow","why":"/talkshow","faq":"/contact","/talkshow/chuoi-5-buoi":"/talkshow","/khoa-hoc":"/academy","/ve-be-brand":"/about","/su-kien":"/events","/kien-thuc":"/journal","/cong-dong":"/community","/lien-he":"/contact","/cam-on":"/thanks","/chinh-sach":"/policies"};
+const nav=[["home","Trang chủ"],["courses","Khóa học"],["talkshow","Talkshow 5 buổi"],["events","Sự kiện"],["knowledge","Kiến thức"],["about","Về Bê Brand"]];
+function parseQuery(s){const result=Object.create(null);for(const entry of (s||"").split("&")){if(!entry)continue;try{const [key,...parts]=entry.split("=");result[decodeURIComponent(key)]=decodeURIComponent(parts.join("=").replace(/\+/g," "))}catch{}}return result}
 
-const navigation = [
-  ['academy', 'Học viện'], ['talkshow', 'Talkshow'], ['mentors', 'Mentor'],
-  ['journal', 'Góc chia sẻ'], ['about', 'Về Bê Brand']
-];
-const plans = [
-  ['single', 'Tham dự một buổi', 'Giá vé lẻ và quyền lợi từng buổi'],
-  ['series', 'Tham dự cả chuỗi', 'Giá trọn chuỗi và quyền lợi đi kèm']
-];
-const sessionLink = (number) => '#/talkshow/' + number;
+function queryString(obj){return Object.entries(obj).filter(([,v])=>v).map(([k,v])=>encodeURIComponent(k)+"="+encodeURIComponent(v)).join("&")}
 
-const legacyPaths = {
-  top: '/', main: '/', about: '/about', speakers: '/mentors',
-  talkshow: '/talkshow', journey: '/talkshow', register: '/talkshow',
-  why: '/talkshow', faq: '/contact'
-};
-
-function readLocation() {
-  const [path, query] = window.location.hash.slice(1).split('?');
-  return { path: Object.hasOwn(legacyPaths, path) ? legacyPaths[path] : path || '/', params: new URLSearchParams(query) };
+function parseRoute(hash){
+ let [path,query=""]=(String(hash||"").replace(/^#/,"")||"/").split("?");
+ let params=parseQuery(query);
+ if(Object.hasOwn(legacy,path)){const [alias,additional]=legacy[path].split("?");path=alias;params={...parseQuery(additional),...params}}
+ if(/^\/register\/(options|form|confirmation)$/.test(path)){path=path.endsWith("confirmation")?"/thanks":"/contact";params.topic="talkshow"}
+ const m=path.match(/^\/talkshow\/(0[1-5])$/);
+ return {path,params,page:m?pageById.event:pages.find(p=>p.path===path),number:m?m[1]:""};
 }
 
-function registrationLink(step, session, plan) {
-  const params = new URLSearchParams({ session: session.number });
-  if (plan) params.set('plan', plan[0]);
-  return '#/register/' + step + '?' + params;
+function cleanContext(input){const topic=topics.some(([key])=>key===input.topic)?input.topic:"other";return {topic,session:topic==="talkshow"&&numbers.slice(1).includes(input.session)?input.session:"",plan:topic==="talkshow"&&plans.some(([key])=>key===input.plan)?input.plan:""}}
+
+function link(id,context={},number){const page=pageById[id];if(!page)return "#/";const path=id==="event"?"/talkshow/"+(numbers.includes(number)?number:"02"):page.path;const q=queryString(context);return "#"+path+(q?"?"+q:"")}
+
+function contextFor(page,number,plan=""){return cleanContext({topic:["talkshow","event","events"].includes(page.id)?"talkshow":["course","courses"].includes(page.id)?"course":page.id==="community"?"community":"other",session:number,plan})}
+
+function status(n){return n==="01"?"Đã diễn ra":"Chưa công bố lịch"}
+
+function note(s){return "["+s+"]"}
+
+function Action({to,label,href,secondary=false}){return h("a",{className:"button"+(secondary?" secondary":""),href:href||link(to)},label,h(ArrowRight,{size:16,"aria-hidden":true}))}
+
+function Placeholder({label}){const m=label.match(/(\d+):(\d+)$/);return h("div",{className:"placeholder",style:{aspectRatio:m?m[1]+" / "+m[2]:"4 / 3"}},h("span",null,label))}
+
+function Header({page,path,dark,setDark}){
+ const [open,setOpen]=useState(false);useEffect(()=>setOpen(false),[path]);
+ return h("header",{className:"header"},h("div",{className:"wrap header-inner"},h("a",{href:"#/","aria-label":"Bê Brand — Trang chủ"},h("img",{src:"/logos/logo-light.png",alt:"Bê Brand"})),h("button",{type:"button",className:"menu",onClick:()=>setOpen(v=>!v),"aria-label":open?"Đóng menu":"Mở menu","aria-expanded":open,"aria-controls":"main-nav"},h(open?X:Menu)),h("nav",{id:"main-nav",className:open?"open":"","aria-label":"Điều hướng chính"},...nav.map(([id,label])=>h("a",{key:id,href:link(id),"aria-current":page?.id===id?"page":undefined},label)),h("a",{href:link("contact"),className:"header-contact"},"Liên hệ")),h("button",{className:"theme-toggle",type:"button","aria-pressed":dark,onClick:()=>setDark(v=>!v)},dark?"Nền sáng":"Nền tối")));
 }
 
-function Placeholder({ label, ratio = '4 / 3' }) {
-  return <div className="placeholder" style={{ aspectRatio: ratio }}><span>{label}</span></div>;
+function Footer(){return h("footer",{className:"footer dark"},h("div",{className:"wrap footer-inner"},h("a",{href:"#/","aria-label":"Trang chủ"},h("img",{src:"/logos/logo-light.png",alt:"Bê Brand"})),h("p",null,"Bê Brand Academy",h("br"),identity.tagline),h("nav",{"aria-label":"Liên kết cuối trang"},...[["about","Giới thiệu"],["mentors","Mentor"],["showcase","Showcase"],["community","Cộng đồng"],["contact","Liên hệ"],["policies","Chính sách"]].map(([id,label])=>h("a",{href:link(id),key:id},label)),h("a",{href:identity.facebook},"Facebook")),h("details",{className:"review-map"},h("summary",null,"Danh sách duyệt 17 mẫu trang"),h("div",{className:"review-links"},...pages.map(p=>h("a",{key:p.id,href:link(p.id)},p.code+" · "+p.title))))))}
+
+function SessionList({items=numbers,recap=false}){return h("div",{className:"rows"},...items.map(n=>h("a",{key:n,href:link("event",{},n)},h("span",{className:"session-number"},n),h("span",null,h("strong",null,"Buổi "+n+" · "+status(n)),h("small",null,recap?"[Chủ đề · Nội dung recap đã duyệt]":"[Chủ đề · Lịch · Diễn giả]")),h(ArrowRight,{size:18,"aria-hidden":true}))))}
+
+function Form({page,number,params}){
+ const [values,setValues]=useState(()=>cleanContext(page.id==="contact"?params:{topic:"talkshow",session:number,plan:params.plan}));
+ const update=(key,value)=>setValues(v=>cleanContext({...v,[key]:value}));
+ if(page.id==="event"&&number==="01")return h("div",null,h("p",null,"Buổi 01 đã diễn ra. [Record / Recap chỉ hiển thị khi được duyệt]"),h(Action,{href:link("contact",{topic:"talkshow"}),label:"Nhận thông báo các buổi tiếp theo"}));
+ const locked=page.id!=="contact";
+ return h("form",{className:"form",onSubmit:e=>{e.preventDefault();window.location.hash=link("thanks",values)}},
+ h("p",{className:"review-note"},"Bản thử nghiệm: chỉ nhập dữ liệu mẫu, không gửi đăng ký thật."),
+ h("label",null,"Nhu cầu",h("select",{value:values.topic,disabled:locked,onChange:e=>update("topic",e.target.value)},...topics.map(([key,label])=>h("option",{key,value:key},label)))),
+ values.topic==="talkshow"&&h("label",null,"Buổi quan tâm",h("select",{value:values.session,onChange:e=>update("session",e.target.value),disabled:page.id==="event"},h("option",{value:""},"Cả chuỗi / Chưa chọn"),...numbers.slice(1).map(n=>h("option",{value:n,key:n},"Buổi "+n+" — chưa công bố")))),
+ values.topic==="talkshow"&&h("label",null,"Phương án quan tâm",h("select",{value:values.plan,onChange:e=>update("plan",e.target.value)},h("option",{value:""},"Chưa chọn"),...plans.map(([key,label])=>h("option",{value:key,key},label+" (đề xuất)")))),
+ h("label",null,"Họ và tên mẫu",h("input",{required:true,placeholder:"[Tên người tham dự]",autoComplete:"off"})),
+ h("label",null,"Email hoặc số điện thoại mẫu",h("input",{required:true,placeholder:"[Một kênh liên hệ]",autoComplete:"off"})),
+ h("p",{className:"review-note"},"[Thông báo xử lý dữ liệu / Chính sách được duyệt]"),h("button",{type:"submit",className:"button"},"Thử gửi yêu cầu",h(ArrowRight,{size:16,"aria-hidden":true})));
 }
 
-function Action({ href, children, secondary = false }) {
-  return <a className={secondary ? 'button secondary' : 'button'} href={href}>{children}<ArrowRight size={17} aria-hidden="true" /></a>;
+function Context({params}){const ctx=cleanContext(params);return h("div",{className:"panel context"},h("p",null,topics.find(x=>x[0]===ctx.topic)?.[1]),ctx.topic==="talkshow"&&h("p",null,ctx.session?"Buổi "+ctx.session:"Cả chuỗi / Chưa chọn",ctx.plan?" · "+plans.find(x=>x[0]===ctx.plan)?.[1]:""))}
+
+function Pricing({page,number}){if(!["event","talkshow"].includes(page.id))return null;if(page.id==="event"&&number==="01")return h("p",{className:"review-note"},"[Thông tin buổi đã qua — không mở bán]");return h("div",{className:"grid"},...plans.map(([key,title,body])=>h("div",{className:"panel",key},h("h3",null,title),h("p",null,"[Giá chờ duyệt]"),h("p",null,note(body)),h(Action,{href:link("contact",contextFor(page,number,key)),label:"Quan tâm phương án",secondary:true}))))}
+
+function Cards({section}){return h("div",{className:"grid"},...[0,1,2].map(i=>h("div",{className:"card",key:i},section.image&&h(Placeholder,{label:section.image}),h("p",null,note(section.body)),section.cardTo&&h(Action,{to:section.cardTo,label:({course:"Xem chi tiết khóa học",mentor:"Xem hồ sơ",project:"Xem dự án",article:"Đọc bài viết"})[section.cardTo]||"Xem chi tiết",secondary:true}))))}
+
+function Body({page,section,number,params}){
+ const l=section.layout;
+ if(l==="cards")return h(Cards,{section});
+ if(l==="series"||l==="sessionnav")return h(SessionList,{});
+ if(l==="upcoming")return h(SessionList,{items:numbers.slice(1)});
+ if(l==="past")return h("div",{className:"split"},h(Placeholder,{label:"Ảnh recap buổi 01 được phép công bố · 16:9"}),h(SessionList,{items:["01"],recap:true}));
+ if(l==="pricing")return h("div",null,h("p",null,note(section.body)),h(Pricing,{page,number}));
+ if(l==="organizers")return h("div",{className:"grid two"},...["Bê Brand","BrandBAE"].map(name=>h("div",{className:"panel",key:name},h(Placeholder,{label:"Logo / ảnh "+name+" gốc · 4:3"}),h("h3",null,name),h("p",null,"[Giới thiệu · Vai trò đã xác nhận]"))));
+ if(l==="form")return h(Form,{page,number,params});
+ if(l==="context"||l==="success")return h("div",null,l==="success"&&h("p",{className:"review-note"},"Đã hoàn thành luồng mẫu. Không có dữ liệu đăng ký được gửi."),h(Context,{params}));
+ if(l==="timeline")return h("div",{className:"grid"},...[1,2,3].map(n=>h("div",{className:"panel",key:n},h("h3",null,"[Bước "+n+"]"),h("p",null,note(section.body)))));
+ if(l==="gallery")return h("div",{className:"grid"},...[1,2,3].map(n=>h(Placeholder,{key:n,label:section.image})));
+ if(l==="faq")return h("details",{className:"panel"},h("summary",null,"[Câu hỏi thường gặp]"),h("p",null,note(section.body)));
+ if(l==="filters"){if(page.id==="events")return h("div",{className:"actions"},...page.sections.filter(s=>s.layout==="upcoming"||s.layout==="past").map(s=>h("button",{type:"button",key:s.code,className:"button secondary",onClick:()=>document.getElementById(page.code+"-"+s.code)?.scrollIntoView({block:"start"})},s.layout==="upcoming"?"Chưa công bố / Sắp tới":"Đã diễn ra")));return h("p",{className:"review-note"},"[Bộ lọc dự kiến: "+section.body+"]")}
+ return h("div",{className:section.image?"split":undefined},h("p",null,note(section.body)),section.image&&h(Placeholder,{label:section.image}));
 }
 
-function Back({ href, children }) {
-  return <a className="back" href={href}><ArrowLeft size={16} aria-hidden="true" />{children}</a>;
+function Screen({page,number,params}){return h(ReactFragment,null,...page.sections.map((section,i)=>{
+ const first=i===0,hero=section.layout==="hero",title=page.id==="event"&&hero?"Buổi "+number+" — "+status(number):section.title;
+ const cta=section.cta&&!(page.id==="event"&&number==="01"&&section.to==="contact")?h(Action,{href:section.to==="contact"?link("contact",contextFor(page,number)):link(section.to),label:section.cta,secondary:!first}):null;
+ const children=hero?h("div",{className:"wrap intro-inner"+(section.image?" split":"")},h("div",null,h("p",{className:"eyebrow"},page.code+"-"+section.code+" · "+page.title),h("h1",null,page.id==="home"?"[Headline định vị]":title),h("p",{className:"lede"},note(section.body)),cta&&h("div",{className:"actions"},cta)),section.image&&h(Placeholder,{label:section.image})):h("div",{className:"wrap section"},h("p",{className:"section-code"},page.code+"-"+section.code),h(first?"h1":"h2",null,title),h(Body,{page,section,number,params}),cta&&h("div",{className:"actions"},cta));
+ return h("section",{className:hero?"dark intro":"review-section",id:page.code+"-"+section.code,key:section.code},children)
+}))}
+
+function App(){const [route,setRoute]=useState(()=>parseRoute(window.location.hash));const [dark,setDark]=useState(false);
+ useEffect(()=>{const update=()=>{setRoute(parseRoute(window.location.hash));window.scrollTo(0,0);document.getElementById("main-content")?.focus({preventScroll:true})};window.addEventListener("hashchange",update);return()=>window.removeEventListener("hashchange",update)},[]);
+ useEffect(()=>{document.title=(route.page?route.page.title+" — ":"")+"Bê Brand Academy | Bản duyệt"},[route.path]);
+ const {page,number,params,path}=route;
+ return h("div",{className:"review-site"+(dark?" theme-dark":"")},h("a",{className:"skip-link",href:"#main-content",onClick:e=>{e.preventDefault();document.getElementById("main-content")?.focus()}},"Đến nội dung chính"),h(Header,{page,path,dark,setDark}),h("div",{className:"review-strip"},"Bản duyệt cấu trúc · Nội dung và ảnh chưa phê duyệt"),h("main",{id:"main-content",tabIndex:-1},page?h(Screen,{page,number,params,key:path+"?"+queryString(params)}):h("section",{className:"wrap section"},h("h1",null,"Không tìm thấy trang"),h(Action,{to:"home",label:"Về trang chủ"}))),h(Footer));
 }
-
-function Header({ path }) {
-  const [open, setOpen] = useState(false);
-  useEffect(() => setOpen(false), [path]);
-  return <header className="header">
-    <div className="wrap header-inner">
-      <a href="#/" aria-label="Bê Brand Academy — Trang chủ"><img src="/logos/logo-light.png" alt="Bê Brand" /></a>
-      <button className="menu" aria-label={open ? 'Đóng menu' : 'Mở menu'} aria-expanded={open} aria-controls="main-nav" onClick={() => setOpen(!open)}>{open ? <X /> : <Menu />}</button>
-      <nav id="main-nav" aria-label="Điều hướng chính" className={open ? 'open' : ''}>
-        {navigation.map(([slug, label]) => <a key={slug} href={'#/' + slug} aria-current={path === '/' + slug || path.startsWith('/' + slug + '/') ? 'page' : undefined}>{label}</a>)}
-        <a href="#/contact" className="header-contact">Liên hệ <ArrowRight size={15} aria-hidden="true" /></a>
-      </nav>
-    </div>
-  </header>;
-}
-
-function Footer() {
-  return <footer className="footer dark"><div className="wrap footer-inner">
-    <a href="#/" aria-label="Bê Brand Academy — Trang chủ"><img src="/logos/logo-light.png" alt="Bê Brand" /></a>
-    <p>Bê Brand Academy<br />{identity.tagline}</p>
-    <nav aria-label="Liên kết cuối trang"><a href="#/about">Về Bê Brand</a><a href="#/contact">Liên hệ</a><a href={identity.facebook}>Facebook</a></nav>
-  </div></footer>;
-}
-
-function PageIntro({ label, title, description, image, ratio, children }) {
-  return <section className="dark intro"><div className={'wrap intro-inner' + (image ? ' split' : '')}>
-    <div><p className="eyebrow">{label}</p><h1>{title}</h1><p className="lede">{description}</p>{children && <div className="actions">{children}</div>}</div>
-    {image && <Placeholder label={image} ratio={ratio} />}
-  </div></section>;
-}
-
-function Section({ title, children, id }) {
-  return <section className="wrap section" id={id}><h2>{title}</h2>{children}</section>;
-}
-
-const featured = [
-  ['academy', 'Học viện', 'Ảnh hoạt động lớp học', 'Giới thiệu lộ trình và chương trình đào tạo.'],
-  ['talkshow', 'Chuỗi Talkshow', 'Key visual chuỗi Talkshow', 'Khám phá nội dung và chọn buổi trong chuỗi 5 Talkshow.'],
-  ['journal', 'Góc chia sẻ', 'Ảnh bìa bài viết', 'Bài viết và tài liệu về branding và performance.']
-];
-
-function Home() {
-  return <>
-    <PageIntro label="BÊ BRAND ACADEMY" title={<>Học nền tảng.<br />Làm thương hiệu.</>} description="[Giới thiệu ngắn về học viện, đối tượng học và giá trị chương trình]" image="Key visual Bê Brand Academy · 4:3">
-      <Action href="#/talkshow">Khám phá Talkshow</Action><Action href="#/academy" secondary>Xem chương trình</Action>
-    </PageIntro>
-    <Section title="Khám phá Bê Brand Academy">
-      <div className="grid">{featured.map(([slug, title, image, description]) => <a className="card" href={'#/' + slug} key={slug}>
-        <Placeholder label={image + ' · 16:9'} ratio="16 / 9" /><h3>{title}<ArrowRight size={18} aria-hidden="true" /></h3><p>{description}</p>
-      </a>)}</div>
-    </Section>
-    <Section title="Đội ngũ đồng hành"><p>[Giới thiệu đội ngũ giảng viên và mentor]</p><Action href="#/mentors" secondary>Xem đội ngũ</Action></Section>
-  </>;
-}
-
-function SessionList({ items }) {
-  return <div className="rows">{items.map(session => <a key={session.number} href={sessionLink(session.number)}>
-    <span className="session-number">{session.number}</span><span><strong>{session.title}</strong><small>[Lịch · hình thức · diễn giả]</small></span><ArrowRight size={19} aria-hidden="true" />
-  </a>)}</div>;
-}
-
-function Talkshow() {
-  function showSessions() { document.getElementById('sessions')?.scrollIntoView(); }
-  return <>
-    <PageIntro label="CHUỖI TALKSHOW · 5 BUỔI" title="Branding & Performance" description="[Mô tả chủ đề, mục tiêu của chuỗi và giá trị sau 5 buổi]" image="Key visual chuỗi Talkshow · 4:3">
-      <button className="button" onClick={showSessions}>Xem lịch 5 buổi <ArrowDown size={17} aria-hidden="true" /></button>
-    </PageIntro>
-    <Section title="Ai nên tham dự?"><p>[Nhóm người tham dự và nhu cầu phù hợp với chuỗi Talkshow]</p></Section>
-    <Section title="Lịch 5 buổi Talkshow" id="sessions"><SessionList items={sessions} /></Section>
-    <Section title="Chương trình đã diễn ra"><Placeholder label="Ảnh recap chương trình · 16:9" ratio="16 / 9" /><p>[Danh sách buổi đã diễn ra, hình ảnh recap và tài liệu nếu có]</p></Section>
-    <Section title="Chương trình sắp diễn ra"><p>[Xác nhận các buổi sắp diễn ra, thời gian và địa điểm]</p><button className="button secondary" onClick={showSessions}>Xem danh sách buổi</button></Section>
-    <Section title="Quyền lợi người tham dự"><p>[Tài liệu, phiên hỏi đáp và quyền lợi theo từng phương án]</p></Section>
-    <Section title="Bảng giá và chính sách vé"><div className="grid two">{plans.map(([key, label, description]) => <div className="panel" key={key}><h3>{label}</h3><p>[{description}]</p></div>)}</div><p>[Điều kiện ưu đãi, đổi vé và hoàn phí]</p></Section>
-    <Section title="Bê Brand và BrandBAE"><p>[Giới thiệu đơn vị tổ chức, cộng đồng và vai trò của mỗi bên]</p><Action href="#/about" secondary>Tìm hiểu về Bê Brand</Action></Section>
-  </>;
-}
-
-function Session({ session }) {
-  return <>
-    <PageIntro label={'TALKSHOW · BUỔI ' + session.number} title={session.title} description="[Thời gian, hình thức, địa điểm và tên diễn giả]" image="Key visual riêng của buổi Talkshow · 4:3">
-      <Action href={registrationLink('options', session)}>Chọn phương án tham dự</Action>
-    </PageIntro>
-    <Section title="Nội dung buổi Talkshow"><p>[Mô tả ngắn, các chủ đề chính và điều người tham dự nhận được]</p></Section>
-    <Section title="Diễn giả"><div className="portrait"><Placeholder label="Ảnh chân dung diễn giả · 4:5" ratio="4 / 5" /><p>[Tên, chức danh và tiểu sử ngắn]</p></div></Section>
-    <Section title="Các buổi khác"><SessionList items={sessions.filter(item => item !== session)} /><Back href="#/talkshow">Về chuỗi Talkshow</Back></Section>
-  </>;
-}
-
-function Registration({ step, params }) {
-  const session = sessions.find(item => item.number === params.get('session'));
-  const plan = plans.find(item => item[0] === params.get('plan'));
-  if (!session || (step !== 'options' && !plan)) {
-    return <Section title="Chọn buổi Talkshow"><p>Hãy chọn buổi bạn quan tâm để tiếp tục.</p><SessionList items={sessions} /></Section>;
-  }
-
-  const title = { options: 'Chọn phương án tham dự', form: 'Đăng ký mẫu', confirmation: 'Đã hoàn tất đăng ký mẫu' }[step];
-  const back = step === 'options' ? sessionLink(session.number) : registrationLink(step === 'form' ? 'options' : 'form', session, plan);
-
-  function submit(event) {
-    event.preventDefault();
-    window.location.hash = registrationLink('confirmation', session, plan);
-  }
-
-  return <section className="wrap section registration">
-    <Back href={back}>{step === 'options' ? 'Về chi tiết buổi' : step === 'form' ? 'Đổi phương án' : 'Về biểu mẫu'}</Back>
-    <ol className="steps" aria-label="Tiến độ đăng ký">
-      {['Phương án', 'Biểu mẫu', 'Xác nhận'].map((label, index) => <li key={label} aria-current={['options', 'form', 'confirmation'][index] === step ? 'step' : undefined}>{index + 1}. {label}</li>)}
-    </ol>
-    <h1>{title}</h1><p className="selection">Buổi {session.number} · {session.title}{plan && <><br />{plan[1]}</>}</p>
-    {step === 'options' && <div className="grid two">{plans.map(option => <div className="panel" key={option[0]}><h2>{option[1]}</h2><p>[{option[2]}]</p><Action href={registrationLink('form', session, option)}>Chọn phương án</Action></div>)}</div>}
-    {step === 'form' && <form className="form" onSubmit={submit}>
-      <p>Thử luồng với thông tin mẫu. Biểu mẫu chạy trên trang và không gửi dữ liệu.</p>
-      <label>Họ và tên<input required placeholder="Nguyễn Văn A" /></label>
-      <label>Email<input required type="email" placeholder="vidu@example.com" /></label>
-      <button className="button" type="submit">Xác nhận đăng ký mẫu <ArrowRight size={17} aria-hidden="true" /></button>
-    </form>}
-    {step === 'confirmation' && <><p>Bạn đã đi hết luồng mẫu. Thông tin trong biểu mẫu chưa được gửi.</p><Action href="#/talkshow">Về chuỗi Talkshow</Action></>}
-  </section>;
-}
-
-const pages = {
-  academy: { label: 'HỌC VIỆN', title: 'Chương trình đào tạo', description: '[Tổng quan chương trình, đối tượng và lộ trình học]', image: 'Ảnh hoạt động lớp học · 4:3', sections: [['Lộ trình học', '[Các cấp độ, thứ tự và thời lượng từng cấp]'], ['Khóa học', '[Tên khóa học, mục tiêu và hình thức học]', ['academy/course', 'Xem khóa học']]] },
-  'academy/course': { label: 'KHÓA HỌC', title: '[Tên khóa học]', description: '[Mục tiêu học và đối tượng phù hợp]', image: 'Ảnh bìa khóa học · 4:3', sections: [['Nội dung khóa học', '[Danh sách học phần, lịch học và thời lượng]'], ['Thông tin tham gia', '[Học phí và điều kiện đăng ký]', ['contact', 'Hỏi về khóa học']]] },
-  mentors: { label: 'ĐỘI NGŨ', title: 'Mentor và giảng viên', description: '[Giới thiệu đội ngũ và chuyên môn]', sections: [['Hồ sơ mentor', '[Tên · chức danh · chuyên môn · tiểu sử ngắn]', null, 'Ảnh chân dung mentor · 4:5', '4 / 5']] },
-  journal: { label: 'GÓC CHIA SẺ', title: 'Bài viết và tài liệu', description: '[Giới thiệu chủ đề và nhóm nội dung]', sections: [['Bài viết', '[Tên bài viết · tóm tắt ngắn]', ['journal/article', 'Xem bài viết'], 'Ảnh bìa bài viết · 16:9', '16 / 9']] },
-  'journal/article': { label: 'BÀI VIẾT', title: '[Tiêu đề bài viết]', description: '[Tác giả · ngày xuất bản · mô tả ngắn]', image: 'Ảnh bìa bài viết · 16:9', ratio: '16 / 9', sections: [['Nội dung bài viết', '[Nội dung, hình minh họa và tài liệu tham khảo]', ['journal', 'Về góc chia sẻ']]] },
-  about: { label: 'VỀ BÊ BRAND', title: 'Bê Brand và BrandBAE', description: '[Giới thiệu Bê Brand Academy và cộng đồng BrandBAE]', image: 'Ảnh đội ngũ hoặc cộng đồng · 4:3', sections: [['Bê Brand Academy', '[Sứ mệnh và định hướng đào tạo]'], ['BrandBAE', '[Vai trò của cộng đồng và cách tham gia]', ['contact', 'Liên hệ với Bê Brand']]] },
-  contact: { label: 'LIÊN HỆ', title: 'Kết nối với Bê Brand', description: '[Bổ sung đầu mối, thời gian và phạm vi hỗ trợ]', sections: [] }
-};
-
-function ContentPage({ slug, page }) {
-  return <>
-    <PageIntro {...page} />
-    {page.sections.map(([title, description, link, image, ratio]) => <Section key={title} title={title}>
-      {image && <div className={ratio === '4 / 5' ? 'portrait' : 'article-image'}><Placeholder label={image} ratio={ratio} /></div>}
-      <p>{description}</p>{link && <Action secondary href={'#/' + link[0]}>{link[1]}</Action>}
-    </Section>)}
-    {slug === 'contact' && <Section title="Kênh liên hệ"><div className="contact-links"><a href={'mailto:' + identity.email}>{identity.email}</a><a href={identity.facebook}>Facebook</a><a href={identity.instagram}>Instagram</a></div></Section>}
-  </>;
-}
-
-export default function App() {
-  const [location, setLocation] = useState(readLocation);
-  const { path, params } = location;
-  const slug = path.slice(1);
-  useEffect(() => {
-    const update = () => {
-      setLocation(readLocation());
-      window.scrollTo(0, 0);
-      document.getElementById('main-content')?.focus({ preventScroll: true });
-    };
-    window.addEventListener('hashchange', update);
-    return () => window.removeEventListener('hashchange', update);
-  }, []);
-
-  const session = sessions.find(item => sessionLink(item.number) === '#' + path);
-  const registration = path.match(/^\/register\/(options|form|confirmation)$/);
-  let page;
-  if (path === '/') page = <Home />;
-  else if (path === '/talkshow') page = <Talkshow />;
-  else if (session) page = <Session session={session} />;
-  else if (registration) page = <Registration key={path + params} step={registration[1]} params={params} />;
-  else if (Object.hasOwn(pages, slug)) page = <ContentPage slug={slug} page={pages[slug]} />;
-  else page = <PageIntro label="404" title="Không tìm thấy trang" description="Bạn có thể quay về trang chủ để tiếp tục."><Action href="#/">Về trang chủ</Action></PageIntro>;
-
-  return <><button className="skip-link" onClick={() => document.getElementById('main-content')?.focus()}>Đến nội dung chính</button><Header path={path} /><main id="main-content" tabIndex={-1}>{page}</main><Footer /></>;
-}
+export default App;

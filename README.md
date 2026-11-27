@@ -1,25 +1,25 @@
-# Bê Brand Academy
+# Bê Brand Academy — Placeholder + Flow V0.3
 
-Bản Placeholder + Flow để duyệt cấu trúc, điều hướng và nội dung cần chuẩn bị.
+Bản duyệt cấu trúc, chưa phải website nội dung chính thức.
 
-## Chạy website
+- 17 mẫu trang / 95 section từ Wireflow V0.2. Danh sách đầy đủ ở footer.
+- `src/reviewPages.js`: nhãn nội dung, mã Pxx-Sxx, tỷ lệ ảnh và liên kết.
+- `src/App.jsx`: component placeholder, route, form mô phỏng và 5 buổi Talkshow.
+- `src/styles.css`: palette HEX guideline và hai texture riêng. Clash Display được ưu tiên nếu có font hợp lệ; hiện dùng fallback Be Vietnam Pro cho headline, Roboto Slab cho body. Không giả định có file font gốc.
+- `public/textures/paper-cream.webp`: crop 320x320 từ Bê Brand Talkshow BG 2.png; `paper-charcoal.webp`: crop 320x320 từ Bê Brand Talkshow BG.png. Vùng giấy trống tại x=650,y=300, nén WebP; không chứa logo, mascot hay poster. Ảnh gốc không bị chỉnh sửa.
+- Giữ nguyên logo và GTM từ repository. Những thông tin còn trong content.js được lưu làm tham chiếu, không tự công bố.
+- Form chỉ mô phỏng, không gửi hoặc lưu dữ liệu; chỉ nhập thông tin mẫu. Không có thanh toán, giá và lịch chính thức cho các buổi chưa công bố.
+- `PREVIEW-WITHOUT-NPM.html` và `PREVIEW-SCREENSHOT.jpg`: lưu bản cũ, không dùng để duyệt bản mới.
 
+## Chạy dự án
 ```sh
 npm ci
 npm run dev
 npm run build
 ```
 
-Netlify phục vụ bản build từ thư mục `dist/`.
-
-## Duyệt luồng Talkshow
-
-Từ Trang chủ, chọn **Khám phá Talkshow** → **Xem lịch 5 buổi** → chọn một buổi → chọn phương án tham dự → điền biểu mẫu mẫu → xem xác nhận. Mã buổi và phương án nằm trong URL hash để giữ lựa chọn khi tải lại trang. Biểu mẫu không gửi thông tin đăng ký.
-
-## Chuẩn bị nội dung
-
-- **`src/App.jsx`** chứa các trang, nhãn nội dung và khung ảnh giữ chỗ. Nhãn khung ảnh ghi rõ chủ đề và tỷ lệ dự kiến.
-- **`src/content.js`** chứa thông tin liên hệ và tên 5 buổi Talkshow kế thừa từ bản trước. Duyệt lại tên buổi và nội dung sự kiện trước khi công bố.
-- **`public/logos/`** chứa logo gốc. Texture giấy tạm tại **`public/textures/paper.png`** được phối trên nền kem và than. Có thể cập nhật hai nền trong **`src/styles.css`** khi có texture chính thức.
-
-Các file `PREVIEW-WITHOUT-NPM.html` và `PREVIEW-SCREENSHOT.jpg` lưu giao diện phiên bản trước.
+## Luồng duyệt
+Homepage → Khóa học → Chi tiết → Tư vấn → Xác nhận mẫu.
+Homepage / Sự kiện → Chuỗi Talkshow → Buổi 02–05 → Phương án → Form mẫu → Xác nhận.
+Buổi 01 đã diễn ra: không mở bán; chỉ giữ placeholder recap và điều hướng nhận thông báo tiếp theo.
+Đổi nhu cầu sang khóa học phải xóa buổi/gói Talkshow đã chọn.

@@ -4,12 +4,13 @@
   font-family: 'Roboto Slab', Georgia, serif;
   color: #302e28;
   background: #f2e8d9;
-  --cream: #f2e8d9;
-  --ink: #302e28;
-  --red: #a83221;
+  --cream: #DED2C1;
+  --ink: #3D3E38;
+  --red: #C23B27;
   --line: #948775;
-  --headline: 'Be Vietnam Pro', Arial, sans-serif;
-  --paper: url('/textures/paper.png');
+  --headline: 'Clash Display', 'Be Vietnam Pro', Arial, sans-serif;
+  --paper: url('/textures/paper-cream.webp');
+  --paper-dark: url('/textures/paper-charcoal.webp');
 }
 
 * { box-sizing: border-box; }
@@ -31,7 +32,7 @@ main:focus { outline: none; }
 .header-contact { display: inline-flex; align-items: center; gap: 7px; border: 1px solid currentColor; padding: 10px 13px; }
 .menu { display: none; background: transparent; border: 1px solid var(--line); padding: 7px; color: inherit; }
 .menu svg { display: block; }
-.dark { background: var(--paper) repeat, radial-gradient(ellipse at 85% 0%, #3d3e38, #272824 70%); color: #f5ebdc; }
+.dark { background: var(--paper-dark) repeat, #3D3E38; color: #DED2C1; }
 .intro { border-bottom: 4px solid #c23b27; }
 .intro-inner { padding-block: clamp(54px, 8vw, 105px); }
 .split { display: grid; grid-template-columns: 1.18fr .82fr; align-items: center; gap: clamp(28px, 6vw, 82px); }
@@ -101,3 +102,30 @@ p { line-height: 1.65; margin: .85rem 0 1rem; }
   .intro-inner { padding-block: 44px; }
   .footer nav { margin-left: 0; }
 }
+
+/* V0.3: two source textures; wireflow placeholders only */
+.review-site { min-height:100vh; color:var(--ink); background:var(--paper) repeat,var(--cream); background-size:320px 320px; }
+.dark { background:var(--paper-dark) repeat,#3D3E38; background-size:320px 320px; color:#DED2C1; }
+.review-strip { padding:8px max(24px,calc((100% - 1120px)/2)); border-bottom:1px dashed var(--line); font:600 .75rem/1.4 var(--headline); }
+.section-code { margin:0 0 9px; font:600 .7rem/1.4 var(--headline); letter-spacing:.06em; color:#62594e; }
+.review-note { font-size:.85rem; opacity:.9; }
+.review-section { border-bottom:1px solid #ac9e8a; }
+.review-section .section { border:0; }
+.review-section h1 { font-size:clamp(2rem,4vw,3.3rem); margin-bottom:18px; }
+.placeholder,.dark .placeholder { background:transparent; border:1px dashed var(--line); }
+.card,.panel { box-shadow:none; min-width:0; }
+.card > .button { margin-top:12px; }
+.form select { font:inherit; border:1px solid var(--line); color:var(--ink); background:#fff9f0; padding:12px; width:100%; }
+.theme-toggle { background:transparent; color:inherit; border:1px solid currentColor; font:600 .75rem var(--headline); padding:9px; min-height:44px; white-space:nowrap; }
+.review-map { flex-basis:100%; border-top:1px solid #a99c89; padding-top:14px; }
+.review-map summary { cursor:pointer; }
+.review-links { display:grid; grid-template-columns:repeat(auto-fit,minmax(180px,1fr)); gap:10px; margin-top:15px; font-size:.8rem; }
+.theme-dark { background:var(--paper-dark) repeat,#3D3E38; color:#DED2C1; }
+.theme-dark .header,.theme-dark .review-strip { border-color:#a99c89; }
+.theme-dark .header nav [aria-current],.theme-dark .session-number,.theme-dark .section-code { color:#F4B8AA; }
+.theme-dark .placeholder { color:#DED2C1; border-color:#a99c89; }
+.theme-dark .panel,.theme-dark .card { color:inherit; background:#ffffff08; border-color:#a99c89; }
+.theme-dark .button.secondary { color:#DED2C1; }
+.theme-dark .header nav.open { background:var(--paper-dark) repeat,#3D3E38; color:#DED2C1; }
+@media(max-width:850px){.header-inner{gap:12px}.theme-toggle{order:1}.menu{order:2}.header nav.open{top:100%}.review-strip{padding-inline:16px}}
+@media(max-width:640px){.review-links{grid-template-columns:1fr}.review-section .section{padding-block:32px}}
